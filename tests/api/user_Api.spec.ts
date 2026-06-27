@@ -8,7 +8,7 @@ test("Get Call",async({request}) =>
 {
 
     // Specific user details "https://gorest.co.in/public/v2/users/850576"
-    let response = await request.get("https://gorest.co.in/public/v2/users/",{
+    let response = await request.get("https://gorest.co.in/public/v2/users",{
         headers: Auth_Token
     });
 

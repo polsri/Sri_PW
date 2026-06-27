@@ -3,7 +3,7 @@ import {test as baseTest} from "@playwright/test"
 import { APIRequestContext } from "@playwright/test";
 
 
-
+const apiURL= "https://gorest.co.in";
 
 type pageFixtures =
 {
@@ -12,12 +12,12 @@ type pageFixtures =
 
 
 
-baseTest.extend<pageFixtures>(
+export let test = baseTest.extend<pageFixtures>(
 {
 
      apihelper: async({request},use)=>
     {   
-        let apihelper = new apiHelper(request,"")
+        let apihelper = new apiHelper(request, apiURL);
 
         await use(apihelper);
     }
