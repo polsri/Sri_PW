@@ -1,27 +1,29 @@
 name: Playwright Tests
 
 on:
+  # schedule:
+  #   - cron: '30 21 * * 1-4'  # Mon-Fri 8PM IST
   push:
     branches: [main]
   pull_request:
     branches: [main]
-   workflow_dispatch: # manual triggers
-    # inputs:
-    #   environment:
-    #     description: 'Select environment'
-    #     required: true
-    #     default: 'QA'
-    #     type: choice
-    #     options:
-    #       - QA
-    #       - stage
-    #       - dev
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment'
+        required: true
+        default: 'QA'
+        type: choice
+        options:
+          - QA
+          - stage
+          - dev
 
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # environment: ${{ github.event.inputs.environment || 'QA' }}
+    environment: ${{ github.event.inputs.environment || 'QA' }}
 
     steps:
       - name: Checkout code
