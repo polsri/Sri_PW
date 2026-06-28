@@ -15,7 +15,7 @@ export class HomePage extends BasePage
     constructor(page:Page)
     {
         super(page);
-        this.logout=page.getByRole("link",{name:'Logout'})
+        this.logout=page.getByRole("link",{name:'Logout'}).first();
         this.headers=page.getByRole("heading",{level:2})
 
 
@@ -24,7 +24,7 @@ export class HomePage extends BasePage
     // Public page actions(methods)/behaviour
     async isLogoutVisible(): Promise<boolean>
     {
-        this.page.waitForTimeout(2000);
+       // this.page.waitForTimeout(2000);
         return await this.logout.isVisible();
     }
 

@@ -43,6 +43,7 @@ export class LoginPage extends BasePage
         await this.emailId.fill(userName);
         await this.password.fill(password);
         await this.loginButton.click();
+        await this.page.waitForTimeout(4000);
 
     }
 
