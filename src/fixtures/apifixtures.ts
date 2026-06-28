@@ -1,4 +1,4 @@
-import { apiHelper } from "../utils/apihelper";
+import { apiHelper } from "../utils/apiHelper";
 import {test as baseTest} from "@playwright/test"
 import { APIRequestContext } from "@playwright/test";
 
