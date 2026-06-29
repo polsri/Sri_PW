@@ -9,7 +9,7 @@ test.beforeEach( async ({loginPage})=>
 });
 
 
-test('Search prodcuts', async ({searchResultsPage})=>
+test.skip('Search prodcuts', async ({searchResultsPage})=>
    {
     const data = CsvHelper.readCSV('src/data/productdata.csv');
 

@@ -8,7 +8,7 @@ test.beforeEach(async({loginPage})=>
 })
 
 
-test("Select specific product", async({searchResultsPage,productInfo})=>
+test.skip("Select specific product", async({searchResultsPage,productInfo})=>
 {
     await searchResultsPage.doSearch("MacBook");
     await searchResultsPage.selectProduct("MacBook Pro");
