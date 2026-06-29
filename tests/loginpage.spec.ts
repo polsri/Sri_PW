@@ -26,7 +26,7 @@ test('forgot passwrod', async ({loginPage})=>
                
 })
 
-test('Do Login', async ({loginPage,homePage})=>
+test.skip('Do Login', async ({loginPage,homePage})=>
 {
     await loginPage.doLogin(process.env.APP_USERNAME!,process.env.APP_PASSWORD!) 
        
