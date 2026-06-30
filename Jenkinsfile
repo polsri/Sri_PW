@@ -74,7 +74,7 @@ pipeline {
                 echo "  Installing Playwright Dependencies"
                 echo "========================================="
                 dir('qa-tests') {
-                    git url: 'https://github.com/naveenanimation20/OpenCartWebAPIFramework.git',
+                    git url: 'https://github.com/polsri/Sri_PW',
                         branch: 'main'
                     sh 'npm ci'
                     sh 'npx playwright install --with-deps chromium'
