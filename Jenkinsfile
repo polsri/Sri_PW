@@ -9,9 +9,8 @@ pipeline {
 
     tools {
         nodejs 'NodeJS-24'
-       // maven 'Maven-3.9'
         jdk 'JDK-17'
-        allure 'Allure'
+        allure 'Allure 3'
     }
 
     parameters {
