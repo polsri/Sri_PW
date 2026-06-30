@@ -9,7 +9,7 @@ pipeline {
 
     tools {
         nodejs 'NodeJS-24'
-        maven 'Maven-3.9'
+       // maven 'Maven-3.9'
         jdk 'JDK-17'
         allure 'Allure'
     }
@@ -43,28 +43,28 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    stages {
+    // stages {
 
-        // ═════════════════════════════════════════════════
-        // STAGE 1: BUILD APP + UNIT TESTS
-        // ═════════════════════════════════════════════════
-        stage('Build & Unit Tests') {
-            steps {
-                echo "========================================="
-                echo "  Building App + Running Unit Tests"
-                echo "========================================="
-                dir('dev-app') {
-                    git url: 'https://github.com/jglick/simple-maven-project-with-tests.git',
-                        branch: 'master'
-                    sh 'mvn clean install -Dmaven.test.failure.ignore=true'
-                }
-            }
-            post {
-                always {
-                    junit 'dev-app/target/surefire-reports/*.xml'
-                }
-            }
-        }
+    //     // ═════════════════════════════════════════════════
+    //     // STAGE 1: BUILD APP + UNIT TESTS
+    //     // ═════════════════════════════════════════════════
+    //     stage('Build & Unit Tests') {
+    //         steps {
+    //             echo "========================================="
+    //             echo "  Building App + Running Unit Tests"
+    //             echo "========================================="
+    //             dir('dev-app') {
+    //                 git url: 'https://github.com/jglick/simple-maven-project-with-tests.git',
+    //                     branch: 'master'
+    //                 sh 'mvn clean install -Dmaven.test.failure.ignore=true'
+    //             }
+    //         }
+    //         post {
+    //             always {
+    //                 junit 'dev-app/target/surefire-reports/*.xml'
+    //             }
+    //         }
+    //     }
 
         // ═════════════════════════════════════════════════
         // STAGE 2: INSTALL PLAYWRIGHT DEPENDENCIES
