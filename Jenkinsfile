@@ -68,85 +68,85 @@ pipeline {
         // ═════════════════════════════════════════════════
         // STAGE 2: INSTALL PLAYWRIGHT DEPENDENCIES
         // ═════════════════════════════════════════════════
-        stage('Install Dependencies') {
-            steps {
-                echo "========================================="
-                echo "  Installing Playwright Dependencies"
-                echo "========================================="
-                dir('qa-tests') {
-                    git url: 'https://github.com/polsri/Sri_PW',
-                        branch: 'main'
-                    sh 'npm ci'
-                    sh 'npx playwright install --with-deps chromium'
-                }
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Installing Playwright Dependencies"
+        //         echo "========================================="
+        //         dir('qa-tests') {
+        //             git url: 'https://github.com/polsri/Sri_PW',
+        //                 branch: 'main'
+        //             sh 'npm ci'
+        //             sh 'npx playwright install --with-deps chromium'
+        //         }
+        //     }
+        // }
 
-        // ═════════════════════════════════════════════════
-        // STAGE 3: DEPLOY DEV + SANITY
-        // ═════════════════════════════════════════════════
-        stage('Deploy to DEV') {
-            steps {
-                echo "========================================="
-                echo "  Deploying to DEV..."
-                echo "========================================="
-                echo "DEV deployment complete ✅"
-            }
-        }
+        // // ═════════════════════════════════════════════════
+        // // STAGE 3: DEPLOY DEV + SANITY
+        // // ═════════════════════════════════════════════════
+        // stage('Deploy to DEV') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Deploying to DEV..."
+        //         echo "========================================="
+        //         echo "DEV deployment complete ✅"
+        //     }
+        // }
 
-        stage('DEV - Sanity Tests') {
-            steps {
-                echo "========================================="
-                echo "  Running SANITY @smoke on DEV"
-                echo "========================================="
-                dir('qa-tests') {
-                    sh 'rm -rf allure-results reports'
-                    withCredentials([
-                        usernamePassword(credentialsId: 'dev-credentials',
-                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
-                        string(credentialsId: 'api-token', variable: 'API_TOKEN'),
-                        string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
-                        string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
-                        string(credentialsId: 'dev-base-url', variable: 'BASE_URL'),
-                        string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
-                    ]) {
-                        sh '''
-                            ENV=dev \
-                            BASE_URL=$BASE_URL \
-                            USERNAME=$USERNAME \
-                            PASSWORD=$PASSWORD \
-                            API_BASE_URL=$API_BASE_URL \
-                            API_TOKEN=$API_TOKEN \
-                            OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
-                            OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
-                            GRANT_TYPE=client_credentials \
-                            npx playwright test --project=chromium --grep @smoke
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    sh 'mkdir -p reports-dev/html reports-dev/allure'
-                    sh 'cp -r qa-tests/reports/html-report/* reports-dev/html/ || true'
-                    sh 'allure generate qa-tests/allure-results --clean -o reports-dev/allure || true'
-                    publishHTML(target: [
-                        reportName: 'DEV Sanity - PW HTML Report',
-                        reportDir: 'reports-dev/html',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                    publishHTML(target: [
-                        reportName: 'DEV Sanity - Allure Report',
-                        reportDir: 'reports-dev/allure',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                }
-            }
-        }
+        // stage('DEV - Sanity Tests') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Running SANITY @smoke on DEV"
+        //         echo "========================================="
+        //         dir('qa-tests') {
+        //             sh 'rm -rf allure-results reports'
+        //             withCredentials([
+        //                 usernamePassword(credentialsId: 'dev-credentials',
+        //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
+        //                 string(credentialsId: 'api-token', variable: 'API_TOKEN'),
+        //                 string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
+        //                 string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
+        //                 string(credentialsId: 'dev-base-url', variable: 'BASE_URL'),
+        //                 string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
+        //             ]) {
+        //                 sh '''
+        //                     ENV=dev \
+        //                     BASE_URL=$BASE_URL \
+        //                     USERNAME=$USERNAME \
+        //                     PASSWORD=$PASSWORD \
+        //                     API_BASE_URL=$API_BASE_URL \
+        //                     API_TOKEN=$API_TOKEN \
+        //                     OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
+        //                     OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
+        //                     GRANT_TYPE=client_credentials \
+        //                     npx playwright test --project=chromium --grep @smoke
+        //                 '''
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             sh 'mkdir -p reports-dev/html reports-dev/allure'
+        //             sh 'cp -r qa-tests/reports/html-report/* reports-dev/html/ || true'
+        //             sh 'allure generate qa-tests/allure-results --clean -o reports-dev/allure || true'
+        //             publishHTML(target: [
+        //                 reportName: 'DEV Sanity - PW HTML Report',
+        //                 reportDir: 'reports-dev/html',
+        //                 reportFiles: 'index.html',
+        //                 keepAll: true,
+        //                 alwaysLinkToLastBuild: true
+        //             ])
+        //             publishHTML(target: [
+        //                 reportName: 'DEV Sanity - Allure Report',
+        //                 reportDir: 'reports-dev/allure',
+        //                 reportFiles: 'index.html',
+        //                 keepAll: true,
+        //                 alwaysLinkToLastBuild: true
+        //             ])
+        //         }
+        //     }
+        // }
 
         // ═════════════════════════════════════════════════
         // STAGE 4: DEPLOY QA + REGRESSION
@@ -157,6 +157,12 @@ pipeline {
                 echo "  Deploying to QA..."
                 echo "========================================="
                 echo "QA deployment complete ✅"
+                dir('qa-tests') {
+                    git url: 'https://github.com/polsri/Sri_PW',
+                        branch: 'main'
+                    sh 'npm ci'
+                    sh 'npx playwright install --with-deps chromium'
+                }
             }
         }
 
@@ -217,143 +223,143 @@ pipeline {
         // ═════════════════════════════════════════════════
         // STAGE 5: DEPLOY STAGE + SANITY
         // ═════════════════════════════════════════════════
-        stage('Deploy to STAGE') {
-            steps {
-                echo "========================================="
-                echo "  Deploying to STAGE..."
-                echo "========================================="
-                echo "STAGE deployment complete ✅"
-            }
-        }
+        // stage('Deploy to STAGE') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Deploying to STAGE..."
+        //         echo "========================================="
+        //         echo "STAGE deployment complete ✅"
+        //     }
+        // }
 
-        stage('STAGE - Sanity Tests') {
-            steps {
-                echo "========================================="
-                echo "  Running SANITY @smoke on STAGE"
-                echo "========================================="
-                dir('qa-tests') {
-                    sh 'rm -rf allure-results reports'
-                    withCredentials([
-                        usernamePassword(credentialsId: 'stage-credentials',
-                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
-                        string(credentialsId: 'api-token', variable: 'API_TOKEN'),
-                        string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
-                        string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
-                        string(credentialsId: 'stage-base-url', variable: 'BASE_URL'),
-                        string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
-                    ]) {
-                        sh '''
-                            ENV=stage \
-                            BASE_URL=$BASE_URL \
-                            USERNAME=$USERNAME \
-                            PASSWORD=$PASSWORD \
-                            API_BASE_URL=$API_BASE_URL \
-                            API_TOKEN=$API_TOKEN \
-                            OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
-                            OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
-                            GRANT_TYPE=client_credentials \
-                            npx playwright test --project=chromium --grep @smoke
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    sh 'mkdir -p reports-stage/html reports-stage/allure'
-                    sh 'cp -r qa-tests/reports/html-report/* reports-stage/html/ || true'
-                    sh 'allure generate qa-tests/allure-results --clean -o reports-stage/allure || true'
-                    publishHTML(target: [
-                        reportName: 'STAGE Sanity - PW HTML Report',
-                        reportDir: 'reports-stage/html',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                    publishHTML(target: [
-                        reportName: 'STAGE Sanity - Allure Report',
-                        reportDir: 'reports-stage/allure',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                }
-            }
-        }
+        // stage('STAGE - Sanity Tests') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Running SANITY @smoke on STAGE"
+        //         echo "========================================="
+        //         dir('qa-tests') {
+        //             sh 'rm -rf allure-results reports'
+        //             withCredentials([
+        //                 usernamePassword(credentialsId: 'stage-credentials',
+        //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
+        //                 string(credentialsId: 'api-token', variable: 'API_TOKEN'),
+        //                 string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
+        //                 string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
+        //                 string(credentialsId: 'stage-base-url', variable: 'BASE_URL'),
+        //                 string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
+        //             ]) {
+        //                 sh '''
+        //                     ENV=stage \
+        //                     BASE_URL=$BASE_URL \
+        //                     USERNAME=$USERNAME \
+        //                     PASSWORD=$PASSWORD \
+        //                     API_BASE_URL=$API_BASE_URL \
+        //                     API_TOKEN=$API_TOKEN \
+        //                     OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
+        //                     OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
+        //                     GRANT_TYPE=client_credentials \
+        //                     npx playwright test --project=chromium --grep @smoke
+        //                 '''
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             sh 'mkdir -p reports-stage/html reports-stage/allure'
+        //             sh 'cp -r qa-tests/reports/html-report/* reports-stage/html/ || true'
+        //             sh 'allure generate qa-tests/allure-results --clean -o reports-stage/allure || true'
+        //             publishHTML(target: [
+        //                 reportName: 'STAGE Sanity - PW HTML Report',
+        //                 reportDir: 'reports-stage/html',
+        //                 reportFiles: 'index.html',
+        //                 keepAll: true,
+        //                 alwaysLinkToLastBuild: true
+        //             ])
+        //             publishHTML(target: [
+        //                 reportName: 'STAGE Sanity - Allure Report',
+        //                 reportDir: 'reports-stage/allure',
+        //                 reportFiles: 'index.html',
+        //                 keepAll: true,
+        //                 alwaysLinkToLastBuild: true
+        //             ])
+        //         }
+        //     }
+        // }
 
-        // ═════════════════════════════════════════════════
-        // STAGE 6: DEPLOY PROD + SMOKE (with approval)
-        // ═════════════════════════════════════════════════
-        stage('Approval for PROD') {
-            steps {
-                input message: 'Deploy to PROD?',
-                    ok: 'Yes, Deploy!',
-                    submitter: 'admin,naveen'
-            }
-        }
+        // // ═════════════════════════════════════════════════
+        // // STAGE 6: DEPLOY PROD + SMOKE (with approval)
+        // // ═════════════════════════════════════════════════
+        // stage('Approval for PROD') {
+        //     steps {
+        //         input message: 'Deploy to PROD?',
+        //             ok: 'Yes, Deploy!',
+        //             submitter: 'admin,naveen'
+        //     }
+        // }
 
-        stage('Deploy to PROD') {
-            steps {
-                echo "========================================="
-                echo "  Deploying to PROD..."
-                echo "========================================="
-                echo "PROD deployment complete ✅"
-            }
-        }
+        // stage('Deploy to PROD') {
+        //     steps {
+        //         echo "========================================="
+        //         echo "  Deploying to PROD..."
+        //         echo "========================================="
+        //         echo "PROD deployment complete ✅"
+        //     }
+        // }
 
-        stage('PROD - Smoke Tests') {
-            steps {
-                echo "========================================="
-                echo "  Running SMOKE @smoke on PROD"
-                echo "========================================="
-                dir('qa-tests') {
-                    sh 'rm -rf allure-results reports'
-                    withCredentials([
-                        usernamePassword(credentialsId: 'prod-credentials',
-                            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
-                        string(credentialsId: 'api-token', variable: 'API_TOKEN'),
-                        string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
-                        string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
-                        string(credentialsId: 'prod-base-url', variable: 'BASE_URL'),
-                        string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
-                    ]) {
-                        sh '''
-                            ENV=prod \
-                            BASE_URL=$BASE_URL \
-                            USERNAME=$USERNAME \
-                            PASSWORD=$PASSWORD \
-                            API_BASE_URL=$API_BASE_URL \
-                            API_TOKEN=$API_TOKEN \
-                            OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
-                            OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
-                            GRANT_TYPE=client_credentials \
-                            npx playwright test --project=chromium --grep @smoke
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    sh 'mkdir -p reports-prod/html reports-prod/allure'
-                    sh 'cp -r qa-tests/reports/html-report/* reports-prod/html/ || true'
-                    sh 'allure generate qa-tests/allure-results --clean -o reports-prod/allure || true'
-                    publishHTML(target: [
-                        reportName: 'PROD Smoke - PW HTML Report',
-                        reportDir: 'reports-prod/html',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                    publishHTML(target: [
-                        reportName: 'PROD Smoke - Allure Report',
-                        reportDir: 'reports-prod/allure',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true
-                    ])
-                }
-            }
-        }
-    }
+    //     stage('PROD - Smoke Tests') {
+    //         steps {
+    //             echo "========================================="
+    //             echo "  Running SMOKE @smoke on PROD"
+    //             echo "========================================="
+    //             dir('qa-tests') {
+    //                 sh 'rm -rf allure-results reports'
+    //                 withCredentials([
+    //                     usernamePassword(credentialsId: 'prod-credentials',
+    //                         usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
+    //                     string(credentialsId: 'api-token', variable: 'API_TOKEN'),
+    //                     string(credentialsId: 'oauth-client-id', variable: 'OAUTH_CLIENT_ID'),
+    //                     string(credentialsId: 'oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
+    //                     string(credentialsId: 'prod-base-url', variable: 'BASE_URL'),
+    //                     string(credentialsId: 'api-base-url', variable: 'API_BASE_URL')
+    //                 ]) {
+    //                     sh '''
+    //                         ENV=prod \
+    //                         BASE_URL=$BASE_URL \
+    //                         USERNAME=$USERNAME \
+    //                         PASSWORD=$PASSWORD \
+    //                         API_BASE_URL=$API_BASE_URL \
+    //                         API_TOKEN=$API_TOKEN \
+    //                         OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID \
+    //                         OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET \
+    //                         GRANT_TYPE=client_credentials \
+    //                         npx playwright test --project=chromium --grep @smoke
+    //                     '''
+    //                 }
+    //             }
+    //         }
+    //         post {
+    //             always {
+    //                 sh 'mkdir -p reports-prod/html reports-prod/allure'
+    //                 sh 'cp -r qa-tests/reports/html-report/* reports-prod/html/ || true'
+    //                 sh 'allure generate qa-tests/allure-results --clean -o reports-prod/allure || true'
+    //                 publishHTML(target: [
+    //                     reportName: 'PROD Smoke - PW HTML Report',
+    //                     reportDir: 'reports-prod/html',
+    //                     reportFiles: 'index.html',
+    //                     keepAll: true,
+    //                     alwaysLinkToLastBuild: true
+    //                 ])
+    //                 publishHTML(target: [
+    //                     reportName: 'PROD Smoke - Allure Report',
+    //                     reportDir: 'reports-prod/allure',
+    //                     reportFiles: 'index.html',
+    //                     keepAll: true,
+    //                     alwaysLinkToLastBuild: true
+    //                 ])
+    //             }
+    //         }
+    //     }
+    // }
 
     // ═════════════════════════════════════════════════════
     // POST — EMAIL + SLACK NOTIFICATIONS
